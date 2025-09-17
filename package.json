@@ -1,0 +1,26 @@
+{
+  "name": "bannergress-api",
+  "version": "0.0.2",
+  "private":false,
+  "description": "TypeScript client SDK for the Bannergress public API.",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^24.4.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bun run tsc",
+    "typecheck": "bun run tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "bannergress"
+  ]
+}
