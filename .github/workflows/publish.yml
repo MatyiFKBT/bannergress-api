@@ -35,6 +35,12 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Generate types (check)
+        run: bun run generate:check
+
+      - name: Test
+        run: bun run test
+
       - name: Build
         run: bun run build
 

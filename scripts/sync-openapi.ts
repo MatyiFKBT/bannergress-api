@@ -16,7 +16,7 @@ export const SINGLE_BANNER_PATH = '/bnrs/{id}'
 
 const singleBannerPath = {
   get: {
-    tags: ['banner-controller'], // same controller as `/bnrs`, so it lands in BannerControllerApi
+    tags: ['banner-controller'], // same controller as `/bnrs`
     operationId: 'get',
     summary: 'Get a single banner by ID',
     description:
@@ -63,7 +63,7 @@ export async function syncOpenApi(): Promise<void> {
   spec.paths = paths
 
   // The published spec declares the Accept-Language header parameter without `schema` or
-  // `content`, which fails openapi-generator's spec validation. It is a plain string.
+  // `content`, which is invalid OpenAPI. It is a plain string.
   const listParameters: any[] | undefined = paths['/bnrs']?.get?.parameters
   for (const parameter of listParameters ?? []) {
     if (!parameter.schema && !parameter.content) {
