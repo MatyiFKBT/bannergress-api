@@ -1,26 +1,48 @@
 {
   "name": "bannergress-api",
   "version": "0.0.2",
-  "private":false,
+  "private": false,
   "description": "TypeScript client SDK for the Bannergress public API.",
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/node": "^24.4.0"
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
   },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "build": "bun run tsc",
-    "typecheck": "bun run tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "check:package": "publint && attw --pack .",
+    "prepublishOnly": "bun run build"
   },
   "keywords": [
     "bannergress"
-  ]
+  ],
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@openapitools/openapi-generator-cli": "^2.42.1",
+    "@types/bun": "latest",
+    "@types/node": "^24.4.0",
+    "publint": "^0.3.25",
+    "tsdown": "^0.23.7",
+    "typescript": "^5"
+  }
 }
