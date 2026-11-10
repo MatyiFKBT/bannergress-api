@@ -1,43 +1,32 @@
 #!/usr/bin/env bun
 /**
- * Regenerates the client from `openapi.json` and leaves the tree typechecking.
+ * Regenerates `schema.d.ts` from `openapi.json`.
  *
  *    bun run generate            # refresh the spec from the live API, then generate
  *    bun run generate:offline    # generate from the committed openapi.json only
+ *    bun run generate:check      # fail if schema.d.ts is out of date
  *
- * The generator runs into a temp directory: emitting in place would also drop `docs/`,
- * `.openapi-generator-ignore` and friends into the repo. Only the files we actually
- * ship are copied over, then `scripts/fix-generated.ts` re-applies our fixes and
- * `tsc --noEmit` proves the result still compiles.
+ * openapi-typescript only emits types; the runtime client lives in `client.ts`.
  */
 import { $ } from 'bun'
-import { cp, mkdtemp, rm } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { fixGenerated } from './fix-generated'
 import { syncOpenApi } from './sync-openapi'
 
-const generatedEntries = ['apis', 'models', 'runtime.ts', 'index.ts'] as const
+const offline = process.argv.includes('--offline')
+const check = process.argv.includes('--check')
 
-if (!process.argv.includes('--offline')) {
+if (!offline) {
   await syncOpenApi()
 }
 
-const out = await mkdtemp(join(tmpdir(), 'bannergress-api-gen-'))
-try {
-  console.log('generate: running openapi-generator (typescript-fetch)…')
-  await $`node_modules/.bin/openapi-generator-cli generate -i openapi.json -g typescript-fetch -o ${out}`.quiet()
+if (check) {
+  console.log('generate: checking schema.d.ts…')
+  await $`node_modules/.bin/openapi-typescript openapi.json -o schema.d.ts --check`
+  console.log('generate: schema is up to date')
+} else {
+  console.log('generate: running openapi-typescript…')
+  await $`node_modules/.bin/openapi-typescript openapi.json -o schema.d.ts`
 
-  for (const entry of generatedEntries) {
-    await rm(entry, { recursive: true, force: true })
-    await cp(join(out, entry), entry, { recursive: true })
-  }
-} finally {
-  await rm(out, { recursive: true, force: true })
+  console.log('generate: typechecking…')
+  await $`bun run typecheck`
+  console.log('generate: done')
 }
-
-await fixGenerated()
-
-console.log('generate: typechecking the generated client…')
-await $`bun run typecheck`
-console.log('generate: done')
