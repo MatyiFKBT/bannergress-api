@@ -1,6 +1,6 @@
 {
   "name": "bannergress-api",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "private": false,
   "description": "TypeScript client SDK for the Bannergress public API.",
   "repository": {
