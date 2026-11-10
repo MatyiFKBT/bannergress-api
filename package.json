@@ -3,6 +3,14 @@
   "version": "0.0.3",
   "private": false,
   "description": "TypeScript client SDK for the Bannergress public API.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatyiFKBT/bannergress-api.git"
+  },
+  "homepage": "https://github.com/MatyiFKBT/bannergress-api#readme",
+  "bugs": {
+    "url": "https://github.com/MatyiFKBT/bannergress-api/issues"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

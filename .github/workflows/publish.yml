@@ -21,10 +21,13 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Toolchain versions
+        run: node --version && npm --version && bun --version
 
       - name: Install
         run: bun install --frozen-lockfile
@@ -45,4 +48,4 @@ jobs:
             echo "bannergress-api@$VERSION is already published, skipping"
             exit 0
           fi
-          npm publish --access public --provenance
+          npm publish --access public --provenance --loglevel=verbose
