@@ -2,7 +2,7 @@
 
 TypeScript client SDK for the [Bannergress](https://bannergress.com) public API. Runs anywhere
 [`fetch`](https://developer.mozilla.org/docs/Web/API/Fetch_API) is available: Node.js 18+, browsers,
-Bun, Deno and web workers. Ships ESM + CommonJS with type declarations.
+Bun, Deno and web workers. Ships as ESM with type declarations and no runtime dependencies.
 
 ## Installation
 

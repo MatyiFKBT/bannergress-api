@@ -41,6 +41,9 @@ jobs:
       - name: Check package
         run: bun run check:package
 
+      - name: Check size
+        run: bun run check:size
+
       - name: Publish if version is new
         run: |
           VERSION=$(node -p "require('./package.json').version")

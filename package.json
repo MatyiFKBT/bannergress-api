@@ -12,19 +12,12 @@
     "url": "https://github.com/MatyiFKBT/bannergress-api/issues"
   },
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -38,7 +31,8 @@
   "scripts": {
     "build": "tsdown",
     "typecheck": "tsc --noEmit",
-    "check:package": "publint && attw --pack .",
+    "check:package": "publint && attw --pack . --profile esm-only",
+    "check:size": "node scripts/check-size.mjs",
     "prepublishOnly": "bun run build"
   },
   "keywords": [
