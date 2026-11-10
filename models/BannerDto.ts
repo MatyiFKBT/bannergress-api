@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from '../runtime';
+import { mapValues, parseDate, parseDateTime, serializeDate, serializeDateTime } from '../runtime';
 import type { BannerListType } from './BannerListType';
 import {
     BannerListTypeFromJSON,
@@ -36,130 +36,92 @@ import {
 export interface BannerDto {
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     id?: string;
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     title: string;
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     description?: string;
     /**
      * 
-     * @type {number}
-     * @memberof BannerDto
      */
     width: number;
     /**
      * 
-     * @type {number}
-     * @memberof BannerDto
      */
     numberOfMissions?: number;
     /**
      * 
-     * @type {number}
-     * @memberof BannerDto
      */
     numberOfSubmittedMissions?: number;
     /**
      * 
-     * @type {number}
-     * @memberof BannerDto
      */
     numberOfDisabledMissions?: number;
     /**
      * 
-     * @type {{ [key: string]: MissionDto; }}
-     * @memberof BannerDto
      */
     missions?: { [key: string]: MissionDto; };
     /**
      * 
-     * @type {number}
-     * @memberof BannerDto
      */
     startLatitude?: number;
     /**
      * 
-     * @type {number}
-     * @memberof BannerDto
      */
     startLongitude?: number;
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     startPlaceId?: string;
     /**
      * 
-     * @type {number}
-     * @memberof BannerDto
      */
     lengthMeters?: number;
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     formattedAddress?: string;
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     picture?: string;
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     type: BannerDtoTypeEnum;
     /**
      * 
-     * @type {BannerListType}
-     * @memberof BannerDto
      */
     listType?: BannerListType;
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     warning?: string;
     /**
      * 
-     * @type {Date}
-     * @memberof BannerDto
      */
     plannedOfflineDate?: Date;
     /**
      * 
-     * @type {Date}
-     * @memberof BannerDto
      */
     eventStartDate?: Date;
     /**
      * 
-     * @type {Date}
-     * @memberof BannerDto
      */
     eventEndDate?: Date;
     /**
      * 
-     * @type {string}
-     * @memberof BannerDto
      */
     uuid?: string;
+    /**
+     * Whether the banner is on the authenticated user’s own list.
+     */
+    owner?: boolean;
 }
 
 
@@ -168,7 +130,7 @@ export interface BannerDto {
  */
 export const BannerDtoTypeEnum = {
     Sequential: 'sequential',
-    AnyOrder: 'anyOrder'
+    AnyOrder: 'anyOrder',
 } as const;
 export type BannerDtoTypeEnum = typeof BannerDtoTypeEnum[keyof typeof BannerDtoTypeEnum];
 
@@ -210,10 +172,11 @@ export function BannerDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'type': json['type'],
         'listType': json['listType'] == null ? undefined : BannerListTypeFromJSON(json['listType']),
         'warning': json['warning'] == null ? undefined : json['warning'],
-        'plannedOfflineDate': json['plannedOfflineDate'] == null ? undefined : (new Date(json['plannedOfflineDate'])),
-        'eventStartDate': json['eventStartDate'] == null ? undefined : (new Date(json['eventStartDate'])),
-        'eventEndDate': json['eventEndDate'] == null ? undefined : (new Date(json['eventEndDate'])),
+        'plannedOfflineDate': json['plannedOfflineDate'] == null ? undefined : (parseDate(json['plannedOfflineDate'])),
+        'eventStartDate': json['eventStartDate'] == null ? undefined : (parseDate(json['eventStartDate'])),
+        'eventEndDate': json['eventEndDate'] == null ? undefined : (parseDate(json['eventEndDate'])),
         'uuid': json['uuid'] == null ? undefined : json['uuid'],
+        'owner': json['owner'] == null ? undefined : json['owner'],
     };
 }
 
@@ -245,10 +208,11 @@ export function BannerDtoToJSONTyped(value?: BannerDto | null, ignoreDiscriminat
         'type': value['type'],
         'listType': BannerListTypeToJSON(value['listType']),
         'warning': value['warning'],
-        'plannedOfflineDate': value['plannedOfflineDate'] == null ? value['plannedOfflineDate'] : value['plannedOfflineDate'].toISOString().substring(0,10),
-        'eventStartDate': value['eventStartDate'] == null ? value['eventStartDate'] : value['eventStartDate'].toISOString().substring(0,10),
-        'eventEndDate': value['eventEndDate'] == null ? value['eventEndDate'] : value['eventEndDate'].toISOString().substring(0,10),
+        'plannedOfflineDate': value['plannedOfflineDate'] == null ? value['plannedOfflineDate'] : serializeDate(value['plannedOfflineDate']),
+        'eventStartDate': value['eventStartDate'] == null ? value['eventStartDate'] : serializeDate(value['eventStartDate']),
+        'eventEndDate': value['eventEndDate'] == null ? value['eventEndDate'] : serializeDate(value['eventEndDate']),
         'uuid': value['uuid'],
+        'owner': value['owner'],
     };
 }
 

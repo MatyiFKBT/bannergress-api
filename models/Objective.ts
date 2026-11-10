@@ -25,7 +25,7 @@ export const Objective = {
     InstallMod: 'installMod',
     TakePhoto: 'takePhoto',
     ViewWaypoint: 'viewWaypoint',
-    EnterPassphrase: 'enterPassphrase'
+    EnterPassphrase: 'enterPassphrase',
 } as const;
 export type Objective = typeof Objective[keyof typeof Objective];
 

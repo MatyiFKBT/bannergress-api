@@ -12,9 +12,9 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const budgets = {
-  size: 16_000, // compressed .tgz
-  unpackedSize: 72_000, // extracted bytes users have on disk
-  files: 32, // file count
+  size: 18_000, // compressed .tgz
+  unpackedSize: 85_000, // extracted bytes users have on disk
+  files: 34, // file count
 }
 
 if (!existsSync('dist/index.js')) {

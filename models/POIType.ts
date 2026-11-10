@@ -20,7 +20,7 @@
 export const POIType = {
     Portal: 'portal',
     FieldTripWaypoint: 'fieldTripWaypoint',
-    Unavailable: 'unavailable'
+    Unavailable: 'unavailable',
 } as const;
 export type POIType = typeof POIType[keyof typeof POIType];
 

@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from '../runtime';
+import { mapValues, parseDate, parseDateTime, serializeDate, serializeDateTime } from '../runtime';
 import type { MissionStepDto } from './MissionStepDto';
 import {
     MissionStepDtoFromJSON,
@@ -36,68 +36,46 @@ import {
 export interface MissionDto {
     /**
      * 
-     * @type {string}
-     * @memberof MissionDto
      */
     id: string;
     /**
      * 
-     * @type {string}
-     * @memberof MissionDto
      */
     title?: string;
     /**
      * 
-     * @type {string}
-     * @memberof MissionDto
      */
     picture?: string;
     /**
      * 
-     * @type {Array<MissionStepDto>}
-     * @memberof MissionDto
      */
     steps?: Array<MissionStepDto>;
     /**
      * 
-     * @type {string}
-     * @memberof MissionDto
      */
     description?: string;
     /**
      * 
-     * @type {string}
-     * @memberof MissionDto
      */
     type?: MissionDtoTypeEnum;
     /**
      * 
-     * @type {string}
-     * @memberof MissionDto
      */
     status?: MissionDtoStatusEnum;
     /**
      * 
-     * @type {Date}
-     * @memberof MissionDto
      */
     latestUpdateStatus?: Date;
     /**
      * 
-     * @type {NamedAgentDto}
-     * @memberof MissionDto
      */
     author?: NamedAgentDto;
     /**
      * 
-     * @type {number}
-     * @memberof MissionDto
      */
     averageDurationMilliseconds?: number;
     /**
      * 
-     * @type {number}
-     * @memberof MissionDto
      */
     lengthMeters?: number;
 }
@@ -109,7 +87,7 @@ export interface MissionDto {
 export const MissionDtoTypeEnum = {
     Sequential: 'sequential',
     AnyOrder: 'anyOrder',
-    Hidden: 'hidden'
+    Hidden: 'hidden',
 } as const;
 export type MissionDtoTypeEnum = typeof MissionDtoTypeEnum[keyof typeof MissionDtoTypeEnum];
 
@@ -119,7 +97,7 @@ export type MissionDtoTypeEnum = typeof MissionDtoTypeEnum[keyof typeof MissionD
 export const MissionDtoStatusEnum = {
     Submitted: 'submitted',
     Published: 'published',
-    Disabled: 'disabled'
+    Disabled: 'disabled',
 } as const;
 export type MissionDtoStatusEnum = typeof MissionDtoStatusEnum[keyof typeof MissionDtoStatusEnum];
 
@@ -149,7 +127,7 @@ export function MissionDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'description': json['description'] == null ? undefined : json['description'],
         'type': json['type'] == null ? undefined : json['type'],
         'status': json['status'] == null ? undefined : json['status'],
-        'latestUpdateStatus': json['latestUpdateStatus'] == null ? undefined : (new Date(json['latestUpdateStatus'])),
+        'latestUpdateStatus': json['latestUpdateStatus'] == null ? undefined : (parseDateTime(json['latestUpdateStatus'])),
         'author': json['author'] == null ? undefined : NamedAgentDtoFromJSON(json['author']),
         'averageDurationMilliseconds': json['averageDurationMilliseconds'] == null ? undefined : json['averageDurationMilliseconds'],
         'lengthMeters': json['lengthMeters'] == null ? undefined : json['lengthMeters'],
@@ -174,7 +152,7 @@ export function MissionDtoToJSONTyped(value?: MissionDto | null, ignoreDiscrimin
         'description': value['description'],
         'type': value['type'],
         'status': value['status'],
-        'latestUpdateStatus': value['latestUpdateStatus'] == null ? value['latestUpdateStatus'] : value['latestUpdateStatus'].toISOString(),
+        'latestUpdateStatus': value['latestUpdateStatus'] == null ? value['latestUpdateStatus'] : serializeDateTime(value['latestUpdateStatus']),
         'author': NamedAgentDtoToJSON(value['author']),
         'averageDurationMilliseconds': value['averageDurationMilliseconds'],
         'lengthMeters': value['lengthMeters'],

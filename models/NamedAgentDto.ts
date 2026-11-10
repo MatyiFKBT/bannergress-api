@@ -29,14 +29,10 @@ import {
 export interface NamedAgentDto {
     /**
      * 
-     * @type {string}
-     * @memberof NamedAgentDto
      */
     name?: string;
     /**
      * 
-     * @type {Faction}
-     * @memberof NamedAgentDto
      */
     faction?: Faction;
 }

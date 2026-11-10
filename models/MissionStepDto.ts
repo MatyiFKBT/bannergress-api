@@ -36,14 +36,10 @@ import {
 export interface MissionStepDto {
     /**
      * 
-     * @type {PoiDto}
-     * @memberof MissionStepDto
      */
     poi?: PoiDto;
     /**
      * 
-     * @type {Objective}
-     * @memberof MissionStepDto
      */
     objective?: Objective;
 }

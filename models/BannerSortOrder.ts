@@ -24,7 +24,7 @@ export const BannerSortOrder = {
     LengthMeters: 'lengthMeters',
     ListAdded: 'listAdded',
     ProximityStartPoint: 'proximityStartPoint',
-    Relevance: 'relevance'
+    Relevance: 'relevance',
 } as const;
 export type BannerSortOrder = typeof BannerSortOrder[keyof typeof BannerSortOrder];
 

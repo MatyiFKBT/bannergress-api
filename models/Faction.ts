@@ -19,7 +19,7 @@
  */
 export const Faction = {
     Enlightened: 'enlightened',
-    Resistance: 'resistance'
+    Resistance: 'resistance',
 } as const;
 export type Faction = typeof Faction[keyof typeof Faction];
 

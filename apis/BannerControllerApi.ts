@@ -12,43 +12,114 @@
  * Do not edit the class manually.
  */
 
-
 import * as runtime from '../runtime';
-import type {
-  BannerDto,
-  BannerListType,
-  BannerSortOrder,
-} from '../models/index';
 import {
+    type BannerDto,
     BannerDtoFromJSON,
     BannerDtoToJSON,
+} from '../models/BannerDto';
+import {
+    type BannerListType,
     BannerListTypeFromJSON,
     BannerListTypeToJSON,
+} from '../models/BannerListType';
+import {
+    type BannerSortOrder,
     BannerSortOrderFromJSON,
     BannerSortOrderToJSON,
-} from '../models/index';
+} from '../models/BannerSortOrder';
+
+export interface GetRequest {
+    /**
+     * Banner ID, as returned by `list`. URL-encode it (IDs may be non-ASCII).
+     */
+    id: string;
+}
 
 export interface ListRequest {
+    /**
+     * Place ID the banner belongs to.
+     */
     placeId?: string;
+    /**
+     * Minimum latitude of the banner start point bounding box. Only valid in combination with all other bounding box parameters.
+     */
     minLatitude?: number;
+    /**
+     * Maximum latitude of the banner start point bounding box. Only valid in combination with all other bounding box parameters.
+     */
     maxLatitude?: number;
+    /**
+     * Minimum longitude of the banner start point bounding box. Only valid in combination with all other bounding box parameters.
+     */
     minLongitude?: number;
+    /**
+     * Minimum longitude of the banner start point bounding box. Only valid in combination with all other bounding box parameters.
+     */
     maxLongitude?: number;
+    /**
+     * Query string. The exact search algorithm may change over time.
+     */
     query?: string;
+    /**
+     * ID of a mission that is part of the banner.
+     */
     missionId?: string;
+    /**
+     * Only banners with missions created by Niantic.
+     */
     onlyOfficialMissions?: boolean;
+    /**
+     * Agent who created one of the missions of the banner.
+     */
     author?: string;
+    /**
+     * List(s) the banner is on (requires authentication).
+     */
     listTypes?: Array<BannerListType>;
+    /**
+     * Only list online/offline banners.
+     */
     online?: boolean;
+    /**
+     * Sort order.
+     */
     orderBy?: BannerSortOrder;
+    /**
+     * Order direction.
+     */
     orderDirection?: ListOrderDirectionEnum;
+    /**
+     * Latitude of the proximity reference point. Required for orderBy=proximityStartPoint.
+     */
     proximityLatitude?: number;
+    /**
+     * Longitude of the proximity reference point. Required for orderBy=proximityStartPoint.
+     */
     proximityLongitude?: number;
+    /**
+     * Only list events which end after this ISO 8601 UTC timestamp.
+     */
     minEventTimestamp?: Date;
+    /**
+     * Only list events which start before this ISO 8601 UTC timestamp.
+     */
     maxEventTimestamp?: Date;
+    /**
+     * Include these attributes in the output.
+     */
     attributes?: Set<ListAttributesEnum>;
+    /**
+     * 0-based offset for searching.
+     */
     offset?: number;
+    /**
+     * Maximum number of results.
+     */
     limit?: number;
+    /**
+     * Language priority list for translations.
+     */
     acceptLanguage?: string;
 }
 
@@ -58,8 +129,56 @@ export interface ListRequest {
 export class BannerControllerApi extends runtime.BaseAPI {
 
     /**
+     * Creates request options for get without sending the request
      */
-    async listRaw(requestParameters: ListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<BannerDto>>> {
+    async getRequestOpts(requestParameters: GetRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling get().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/bnrs/{id}`;
+        urlPath = urlPath.replace('{id}', encodeURIComponent(String(requestParameters['id'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Undocumented route: present on the live API but missing from the published spec.
+     * Get a single banner by ID
+     */
+    async getRaw(requestParameters: GetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BannerDto>> {
+        const requestOptions = await this.getRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BannerDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Undocumented route: present on the live API but missing from the published spec.
+     * Get a single banner by ID
+     */
+    async get(requestParameters: GetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BannerDto> {
+        const response = await this.getRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for list without sending the request
+     */
+    async listRequestOpts(requestParameters: ListRequest): Promise<runtime.RequestOpts> {
         const queryParameters: any = {};
 
         if (requestParameters['placeId'] != null) {
@@ -123,11 +242,11 @@ export class BannerControllerApi extends runtime.BaseAPI {
         }
 
         if (requestParameters['minEventTimestamp'] != null) {
-            queryParameters['minEventTimestamp'] = (requestParameters['minEventTimestamp'] as any).toISOString();
+            queryParameters['minEventTimestamp'] = runtime.serializeDateTime(requestParameters['minEventTimestamp'] as any);
         }
 
         if (requestParameters['maxEventTimestamp'] != null) {
-            queryParameters['maxEventTimestamp'] = (requestParameters['maxEventTimestamp'] as any).toISOString();
+            queryParameters['maxEventTimestamp'] = runtime.serializeDateTime(requestParameters['maxEventTimestamp'] as any);
         }
 
         if (requestParameters['attributes'] != null) {
@@ -151,12 +270,19 @@ export class BannerControllerApi extends runtime.BaseAPI {
 
         let urlPath = `/bnrs`;
 
-        const response = await this.request({
+        return {
             path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
+        };
+    }
+
+    /**
+     */
+    async listRaw(requestParameters: ListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<BannerDto>>> {
+        const requestOptions = await this.listRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BannerDtoFromJSON));
     }
@@ -175,7 +301,7 @@ export class BannerControllerApi extends runtime.BaseAPI {
  */
 export const ListOrderDirectionEnum = {
     Asc: 'ASC',
-    Desc: 'DESC'
+    Desc: 'DESC',
 } as const;
 export type ListOrderDirectionEnum = typeof ListOrderDirectionEnum[keyof typeof ListOrderDirectionEnum];
 /**
@@ -203,6 +329,6 @@ export const ListAttributesEnum = {
     Type: 'type',
     Uuid: 'uuid',
     Warning: 'warning',
-    Width: 'width'
+    Width: 'width',
 } as const;
 export type ListAttributesEnum = typeof ListAttributesEnum[keyof typeof ListAttributesEnum];

@@ -21,7 +21,7 @@ export const BannerListType = {
     None: 'none',
     Todo: 'todo',
     Done: 'done',
-    Blacklist: 'blacklist'
+    Blacklist: 'blacklist',
 } as const;
 export type BannerListType = typeof BannerListType[keyof typeof BannerListType];
 

@@ -29,38 +29,26 @@ import {
 export interface PoiDto {
     /**
      * 
-     * @type {string}
-     * @memberof PoiDto
      */
     id?: string;
     /**
      * 
-     * @type {string}
-     * @memberof PoiDto
      */
     title: string;
     /**
      * 
-     * @type {number}
-     * @memberof PoiDto
      */
     latitude?: number;
     /**
      * 
-     * @type {number}
-     * @memberof PoiDto
      */
     longitude?: number;
     /**
      * 
-     * @type {string}
-     * @memberof PoiDto
      */
     picture: string;
     /**
      * 
-     * @type {POIType}
-     * @memberof PoiDto
      */
     type: POIType;
 }

@@ -30,6 +30,9 @@
   },
   "scripts": {
     "build": "tsdown",
+    "generate": "bun scripts/generate.ts",
+    "generate:offline": "bun scripts/generate.ts --offline",
+    "openapi:sync": "bun scripts/sync-openapi.ts",
     "typecheck": "tsc --noEmit",
     "check:package": "publint && attw --pack . --profile esm-only",
     "check:size": "node scripts/check-size.mjs",
